@@ -15,7 +15,7 @@ export async function createTopic(formData: FormData) {
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
 
-  if (!title || !content) return { error: "Title and Content are required." };
+  if (!title || !content) return;
 
   await prisma.forumTopic.create({
     data: {
@@ -27,7 +27,6 @@ export async function createTopic(formData: FormData) {
   });
 
   revalidatePath("/forum");
-  return { success: true };
 }
 
 export async function deleteTopic(formData: FormData) {
