@@ -7,16 +7,10 @@ import { redirect } from "next/navigation";
 
 export async function createTopic(formData: FormData): Promise<void> {
   const session = await getServerSession(authOptions);
-  
-  if (!session || !session.user) {
-    redirect("/login");
-  }
-
+  if (!session || !session.user) redirect("/login");
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
-
   if (!title || !content) return;
-
   await prisma.forumTopic.create({
     data: {
       title,
@@ -25,17 +19,14 @@ export async function createTopic(formData: FormData): Promise<void> {
       authorId: session.user.id,
     },
   });
-
   revalidatePath("/forum");
 }
 
 export async function deleteTopic(formData: FormData): Promise<void> {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "ADMIN") throw new Error("Unauthorized");
-
   const id = formData.get("id") as string;
   await prisma.forumTopic.delete({ where: { id } });
-  
   revalidatePath("/admin/forum");
   revalidatePath("/forum");
 }

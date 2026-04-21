@@ -30,3 +30,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
+// VIP Update 2026
