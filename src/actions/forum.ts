@@ -5,7 +5,7 @@ import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function createTopic(formData: FormData) {
+export async function createTopic(formData: FormData): Promise<void> {
   const session = await getServerSession(authOptions);
   
   if (!session || !session.user) {
@@ -29,7 +29,7 @@ export async function createTopic(formData: FormData) {
   revalidatePath("/forum");
 }
 
-export async function deleteTopic(formData: FormData) {
+export async function deleteTopic(formData: FormData): Promise<void> {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== "ADMIN") throw new Error("Unauthorized");
 
