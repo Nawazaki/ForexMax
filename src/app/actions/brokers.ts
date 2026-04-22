@@ -3,20 +3,24 @@
 import prisma from "../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+// Modified to use Vercel Blob instead of local file system
 async function handleFileUpload(file: File | null): Promise<string | null> {
   try {
     if (!file || file.size === 0) return null;
-    const buffer = Buffer.from(await file.arrayBuffer());
+    
     const filename = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(path.join(uploadDir, filename), buffer);
-    return `/uploads/${filename}`;
+    
+    // Upload directly to Vercel Blob with public access
+    const blob = await put(`brokers/${filename}`, file, {
+      access: 'public',
+    });
+    
+    // Return the permanent cloud URL provided by Vercel
+    return blob.url;
   } catch (error) {
     console.error("File upload error:", error);
     return null;
