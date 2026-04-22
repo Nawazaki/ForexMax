@@ -1,5 +1,4 @@
 import prisma from "../../../lib/prisma";
-import Image from "next/image";
 import { ShieldCheck, ExternalLink, Building2, Star, ArrowRight } from "lucide-react";
 
 export default async function BrokersPage() {
@@ -35,11 +34,18 @@ export default async function BrokersPage() {
               <div className="relative h-52 w-full bg-gradient-to-br from-white/40 to-white/10 dark:from-zinc-800/40 dark:to-zinc-900/40 overflow-hidden border-b border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-center">
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/40 dark:from-white/5 via-transparent to-transparent transition-all duration-700"></div>
                 <div className="relative w-[70%] h-[70%] flex items-center justify-center bg-white dark:bg-zinc-950 rounded-2xl shadow-lg border border-zinc-100 dark:border-zinc-800 p-4 z-10 group-hover:scale-105 transition-transform duration-500">
+                  
+                  {/* التعديل السحري هنا: استخدام img العادي بدلاً من Image المعقد */}
                   {broker.logoUrl ? (
-                    <Image src={broker.logoUrl} alt={`${broker.name} Logo`} fill className="object-contain p-4" />
+                    <img 
+                      src={broker.logoUrl} 
+                      alt={`${broker.name} Logo`} 
+                      className="w-full h-full object-contain p-4" 
+                    />
                   ) : (
                     <Building2 className="h-16 w-16 text-zinc-300 dark:text-zinc-700" />
                   )}
+
                 </div>
               </div>
 
