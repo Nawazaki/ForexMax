@@ -11,7 +11,7 @@ export default function NewBrokerPage() {
       
       <h1 className="text-2xl font-bold text-slate-900 mb-6">Add New Broker</h1>
       
-      <form action={createBroker} encType="multipart/form-data" className="space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+<form action={createBroker} className="space-y-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Broker Name</label>
