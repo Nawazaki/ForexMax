@@ -3,25 +3,9 @@
 import prisma from "../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
-async function handleFileUpload(file: File | null): Promise<string | null> {
-  try {
-    if (!file || file.size === 0) return null;
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const filename = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(path.join(uploadDir, filename), buffer);
-    return `/uploads/${filename}`;
-  } catch (error) {
-    console.error("File upload error:", error);
-    return null;
-  }
-}
 
 export async function createStrategy(formData: FormData): Promise<void> {
   const session = await getServerSession(authOptions);
@@ -39,14 +23,23 @@ export async function createStrategy(formData: FormData): Promise<void> {
   }
 
   try {
-    const imageUrl = await handleFileUpload(file);
+    let imageUrl = null;
+
+    // الرفع عبر Vercel Blob بدلاً من الحفظ المحلي
+    if (file && file.size > 0) {
+      const blob = await put(`strategies/${file.name}`, file, {
+        access: "public",
+        addRandomSuffix: true,
+      });
+      imageUrl = blob.url;
+    }
 
     await prisma.strategy.create({
       data: {
         title,
         difficulty,
         content,
-        imageUrl,
+        ...(imageUrl && { imageUrl }),
         authorId: session.user.id,
       },
     });
@@ -80,8 +73,14 @@ export async function updateStrategy(formData: FormData): Promise<void> {
   try {
     const dataToUpdate: any = { title, difficulty, content };
 
-    const imageUrl = await handleFileUpload(file);
-    if (imageUrl) dataToUpdate.imageUrl = imageUrl;
+    // الرفع عبر Vercel Blob
+    if (file && file.size > 0) {
+      const blob = await put(`strategies/${file.name}`, file, {
+        access: "public",
+        addRandomSuffix: true,
+      });
+      dataToUpdate.imageUrl = blob.url;
+    }
 
     await prisma.strategy.update({
       where: { id },
