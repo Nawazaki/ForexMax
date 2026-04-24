@@ -8,31 +8,28 @@ export async function registerUser(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
-  
-  // FIX: Changed "terms" to "disclaimer" to match the form input name
-  const disclaimer = formData.get("disclaimer") as string;
 
+  // 1. Basic Field Validation
   if (!fullName || !email || !password || !confirmPassword) {
     return { error: "All fields are required." };
   }
 
+  // 2. Password Match Validation
   if (password !== confirmPassword) {
     return { error: "Passwords do not match." };
   }
 
+  // 3. Password Strength Validation
   if (password.length < 6) {
     return { error: "Password must be at least 6 characters long." };
   }
 
-  // Check if the disclaimer value is exactly "on"
-  if (disclaimer !== "on") {
-    return { error: "You must agree to the Risk Disclaimer to continue." };
-  }
-
   try {
+    // 4. Unique Email Check
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) return { error: "Email already exists. Please login." };
 
+    // 5. Hashing and Storage
     const hashedPassword = await bcrypt.hash(password, 10);
     
     await prisma.user.create({
@@ -49,4 +46,4 @@ export async function registerUser(formData: FormData) {
     return { error: "Something went wrong during registration." };
   }
 }
- 
+ git add . && git commit -m "Rebuild brokers with precise schema, security, and Blob" && git push
