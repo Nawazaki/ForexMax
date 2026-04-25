@@ -3,42 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { registerUser } from "../../actions/auth"; // تأكد من المسار الصحيح
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle2, AlertCircle, Sparkles, Globe, Code, ArrowRight } from "lucide-react";
-
-// تم نقل هذا المكون للخارج لمنع مشكلة فقدان التركيز (Focus Loss) عند الكتابة
-const InputField = ({ icon: Icon, label, name, type = "text", placeholder, gridSpan = "col-span-1", form, setForm, validations, setValidations }: any) => {
-  const isTouched = validations[name as keyof typeof validations]?.touched;
-  const isValid = validations[name as keyof typeof validations]?.isValid;
-  
-  return (
-    <div className={`${gridSpan} space-y-2`}>
-      <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">{label}</label>
-      <div className="relative group">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300">
-          <Icon className={`h-5 w-5 ${isValid && isTouched ? "text-emerald-500" : "text-zinc-500 group-focus-within:text-emerald-400"}`} />
-        </div>
-        <input 
-          type={type} 
-          name={name} 
-          placeholder={placeholder}
-          value={form[name as keyof typeof form]} // تمت إضافة هذه الخاصية المهمة
-          onBlur={() => setValidations((p: any) => ({ ...p, [name]: { ...p[name], touched: true }}))}
-          onChange={(e) => setForm({ ...form, [name]: e.target.value })}
-          className={`w-full pl-12 pr-12 py-3.5 border rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none transition-all duration-300 
-            ${isValid && isTouched ? "border-emerald-500/50 ring-2 ring-emerald-500/10" : "border-zinc-800 focus:border-emerald-500"} 
-            ${!isValid && isTouched ? "border-red-500/50 ring-2 ring-red-500/10" : ""}
-            text-white placeholder:text-zinc-600 font-medium`} 
-        />
-        {(isValid || !isValid) && isTouched && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2">
-            {isValid ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <AlertCircle className="h-5 w-5 text-red-500" />}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
+import { registerUser } from "../../actions/auth";
+import { 
+  User, Mail, Lock, Eye, EyeOff, CheckCircle2, 
+  AlertCircle, Sparkles, Globe, Code, ArrowRight 
+} from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -49,8 +18,12 @@ export default function RegisterPage() {
 
   // Form States
   const [form, setForm] = useState({
-    firstName: "", lastName: "", username: "",
-    email: "", password: "", confirmPassword: ""
+    firstName: "", 
+    lastName: "", 
+    username: "",
+    email: "", 
+    password: "", 
+    confirmPassword: ""
   });
 
   // Validation States
@@ -129,12 +102,81 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-              {/* Using the external InputField and passing props correctly */}
-              <InputField icon={User} label="First Name" name="firstName" placeholder="John" form={form} setForm={setForm} validations={validations} setValidations={setValidations} />
-              <InputField icon={User} label="Last Name" name="lastName" placeholder="Doe" form={form} setForm={setForm} validations={validations} setValidations={setValidations} />
-              <InputField icon={User} label="Username" name="username" placeholder="johntrades" gridSpan="col-span-2" form={form} setForm={setForm} validations={validations} setValidations={setValidations} />
-              <InputField icon={Mail} label="Email Address" name="email" type="email" placeholder="you@example.com" gridSpan="col-span-2" form={form} setForm={setForm} validations={validations} setValidations={setValidations} />
               
+              {/* First Name */}
+              <div className="col-span-1 space-y-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">First Name</label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300">
+                    <User className="h-5 w-5 text-zinc-500 group-focus-within:text-emerald-400" />
+                  </div>
+                  <input 
+                    type="text" name="firstName" placeholder="John"
+                    value={form.firstName}
+                    onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                    className="w-full pl-12 pr-12 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none transition-all duration-300 focus:border-emerald-500 text-white placeholder:text-zinc-600 font-medium" 
+                  />
+                </div>
+              </div>
+
+              {/* Last Name */}
+              <div className="col-span-1 space-y-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Last Name</label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300">
+                    <User className="h-5 w-5 text-zinc-500 group-focus-within:text-emerald-400" />
+                  </div>
+                  <input 
+                    type="text" name="lastName" placeholder="Doe"
+                    value={form.lastName}
+                    onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                    className="w-full pl-12 pr-12 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none transition-all duration-300 focus:border-emerald-500 text-white placeholder:text-zinc-600 font-medium" 
+                  />
+                </div>
+              </div>
+
+              {/* Username */}
+              <div className="col-span-2 space-y-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Username</label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300">
+                    <User className="h-5 w-5 text-zinc-500 group-focus-within:text-emerald-400" />
+                  </div>
+                  <input 
+                    type="text" name="username" placeholder="johntrades"
+                    value={form.username}
+                    onChange={(e) => setForm({ ...form, username: e.target.value })}
+                    className="w-full pl-12 pr-12 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none transition-all duration-300 focus:border-emerald-500 text-white placeholder:text-zinc-600 font-medium" 
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="col-span-2 space-y-2">
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Email Address</label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300">
+                    <Mail className={`h-5 w-5 ${validations.email.isValid && validations.email.touched ? "text-emerald-500" : "text-zinc-500 group-focus-within:text-emerald-400"}`} />
+                  </div>
+                  <input 
+                    type="email" name="email" placeholder="you@example.com"
+                    value={form.email}
+                    onBlur={() => setValidations(prev => ({ ...prev, email: { ...prev.email, touched: true } }))}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className={`w-full pl-12 pr-12 py-3.5 border rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none transition-all duration-300 
+                      ${validations.email.isValid && validations.email.touched ? "border-emerald-500/50 ring-2 ring-emerald-500/10" : "border-zinc-800 focus:border-emerald-500"} 
+                      ${!validations.email.isValid && validations.email.touched ? "border-red-500/50 ring-2 ring-red-500/10" : ""}
+                      text-white placeholder:text-zinc-600 font-medium`} 
+                  />
+                  {validations.email.touched && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      {validations.email.isValid ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <AlertCircle className="h-5 w-5 text-red-500" />}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Password */}
               <div className="col-span-1 space-y-2">
                 <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Password</label>
                 <div className="relative group">
@@ -143,7 +185,7 @@ export default function RegisterPage() {
                   </div>
                   <input 
                     type={showPassword ? "text" : "password"} name="password" required
-                    value={form.password} // تمت الإضافة هنا أيضاً
+                    value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                     className="w-full pl-12 pr-12 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none focus:border-emerald-500 transition-all text-white font-medium" 
                   />
@@ -165,6 +207,7 @@ export default function RegisterPage() {
                 </div>
               </div>
 
+              {/* Confirm Password */}
               <div className="col-span-1 space-y-2">
                 <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Confirm Password</label>
                 <div className="relative group">
@@ -173,15 +216,18 @@ export default function RegisterPage() {
                   </div>
                   <input 
                     type={showPassword ? "text" : "password"} name="confirmPassword" required
-                    value={form.confirmPassword} // تمت الإضافة هنا أيضاً
+                    value={form.confirmPassword}
+                    onBlur={() => setValidations(prev => ({ ...prev, confirm: { ...prev.confirm, touched: true } }))}
                     onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
                     className={`w-full pl-12 pr-12 py-3.5 border rounded-2xl bg-zinc-900/50 backdrop-blur-md outline-none transition-all text-white font-medium 
                       ${validations.confirm.isValid && validations.confirm.touched ? "border-emerald-500/50 ring-2 ring-emerald-500/10" : "border-zinc-800 focus:border-emerald-500"} 
                       ${!validations.confirm.isValid && validations.confirm.touched ? "border-red-500/50" : ""}`} 
                   />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    {validations.confirm.isValid && validations.confirm.touched && <CheckCircle2 className="h-5 w-5 text-emerald-500" />}
-                  </div>
+                  {validations.confirm.touched && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      {validations.confirm.isValid ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <AlertCircle className="h-5 w-5 text-red-500" />}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
