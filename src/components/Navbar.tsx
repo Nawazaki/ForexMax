@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { LayoutDashboard, LogOut, Menu, X, Building2, Target, BookOpen, MessageSquare, Sparkles } from "lucide-react";
+import { LogOut, Menu, X, Building2, Target, BookOpen, MessageSquare, Sparkles, CircleUser } from "lucide-react";
 import { useState } from "react";
 
 export function Navbar() {
@@ -19,7 +19,7 @@ export function Navbar() {
             ForexMax
           </Link>
 
-          {/* Desktop Links (Modern with Icons) */}
+          {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/brokers" className="group flex items-center text-sm font-bold text-zinc-600 dark:text-zinc-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors">
               <Building2 className="h-4 w-4 mr-1.5 text-zinc-400 group-hover:text-emerald-500 transition-colors" />
@@ -43,10 +43,18 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {session ? (
               <div className="flex items-center gap-3">
-                <Link href="/admin" className="flex items-center gap-2 text-sm font-bold text-zinc-700 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-900 px-4 py-2.5 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all border border-zinc-200 dark:border-zinc-800 group">
-                  <LayoutDashboard className="h-4 w-4 text-purple-500 group-hover:scale-110 transition-transform" /> Dashboard
+                <Link 
+                  href="/profile" 
+                  className="flex items-center justify-center h-10 w-10 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 transition-all group"
+                  title="My Profile"
+                >
+                  <CircleUser className="h-6 w-6 text-zinc-600 dark:text-zinc-300 group-hover:text-emerald-500 transition-colors" />
                 </Link>
-                <button onClick={() => signOut()} className="p-2.5 text-zinc-500 hover:text-red-500 bg-zinc-50 dark:bg-zinc-900 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group" title="Logout">
+                <button 
+                  onClick={() => signOut()} 
+                  className="p-2.5 text-zinc-500 hover:text-red-500 bg-zinc-50 dark:bg-zinc-900 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group" 
+                  title="Logout"
+                >
                   <LogOut className="h-5 w-5 group-hover:scale-110 transition-transform" />
                 </button>
               </div>
@@ -88,8 +96,8 @@ export function Navbar() {
           <div className="pt-4 mt-2 border-t border-zinc-100 dark:border-zinc-800 flex flex-col gap-3">
             {session ? (
               <>
-                <Link href="/admin" className="flex items-center justify-center w-full text-sm font-bold text-zinc-700 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-900 px-4 py-3 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all">
-                  <LayoutDashboard className="h-4 w-4 mr-2 text-purple-500" /> Dashboard
+                <Link href="/profile" className="flex items-center justify-center w-full text-sm font-bold text-zinc-700 dark:text-zinc-200 bg-zinc-100 dark:bg-zinc-900 px-4 py-3 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all">
+                  <CircleUser className="h-4 w-4 mr-2 text-emerald-500" /> My Profile
                 </Link>
                 <button onClick={() => signOut()} className="flex items-center justify-center w-full text-sm font-bold text-red-600 bg-red-50 dark:bg-red-500/10 px-4 py-3 rounded-xl hover:bg-red-100 dark:hover:bg-red-500/20 transition-all">
                   <LogOut className="h-4 w-4 mr-2" /> Log Out

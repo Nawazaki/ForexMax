@@ -16,10 +16,9 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     
-    // Replace this with your actual signIn logic
     try {
-      // const result = await signIn("credentials", { ... });
-      router.push("/");
+      // signIn logic here
+      router.push("/"); // Redirect to Home
     } catch (err) {
       setError("Invalid credentials. Please try again.");
       setLoading(false);
