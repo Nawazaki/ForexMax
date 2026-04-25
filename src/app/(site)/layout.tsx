@@ -1,4 +1,3 @@
-import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 
 export default function SiteLayout({
@@ -8,7 +7,6 @@ export default function SiteLayout({
 }) {
   return (
     <>
-      <Navbar />
       <main className="flex-grow">
         {children}
       </main>
