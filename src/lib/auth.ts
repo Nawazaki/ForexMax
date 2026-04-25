@@ -30,10 +30,11 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid email or password");
         }
 
+        // Return the user object including the role from Prisma
         return {
           id: user.id,
           email: user.email,
-          role: user.role,
+          role: user.role, // This is essential
         };
       }
     })
@@ -44,6 +45,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      // 'user' is only available the first time the JWT is created (on login)
       if (user) {
         token.id = user.id;
         token.role = user.role;
@@ -51,9 +53,10 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      // Transfer the role from the JWT token to the Session object
       if (token) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.id = token.id;
+        session.user.role = token.role;
       }
       return session;
     }

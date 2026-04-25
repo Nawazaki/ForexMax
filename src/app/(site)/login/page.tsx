@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Eye, EyeOff, Sparkles, Globe, Code, ArrowRight } from "lucide-react";
+import { signIn, getSession } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,18 +16,42 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
     try {
-      // signIn logic here
-      router.push("/"); // Redirect to Home
+      // 1. Perform the sign in
+      const result = await signIn("credentials", {
+        redirect: false, // We handle redirect manually for better UX
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password.");
+        setLoading(false);
+        return;
+      }
+
+      // 2. Fetch the session to determine the role
+      const session = await getSession();
+      
+      if (session?.user?.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
+      setError("An unexpected error occurred. Please try again.");
       setLoading(false);
     }
   }
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4 bg-zinc-950 overflow-hidden">
+      {/* ... Glassmorphism Background & UI same as provided ... */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
 
