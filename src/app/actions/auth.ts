@@ -8,6 +8,9 @@ import { revalidatePath } from "next/cache";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// ==========================================
+// 1. تسجيل مستخدم جديد (Registration)
+// ==========================================
 export async function registerUser(formData: FormData) {
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
@@ -32,18 +35,18 @@ export async function registerUser(formData: FormData) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    // 1. Create the user (emailVerified is null by default)
+    // Create the user (emailVerified is null by default)
     const user = await prisma.user.create({
       data: { 
         email, username, firstName, lastName, password: hashedPassword, role: "USER" 
       }
     });
 
-    // 2. Generate a secure random token
+    // Generate a secure random token
     const token = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours expiry
 
-    // 3. Store token in database
+    // Store token in database
     await prisma.verificationToken.create({
       data: {
         identifier: email,
@@ -52,7 +55,7 @@ export async function registerUser(formData: FormData) {
       }
     });
 
-    // 4. Send Email via Resend
+    // Send Email via Resend
     const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${token}`;
     
     await resend.emails.send({
@@ -70,7 +73,9 @@ export async function registerUser(formData: FormData) {
   }
 }
 
-// This action will be used by the /verify page
+// ==========================================
+// 2. التحقق من الإيميل (Email Verification)
+// ==========================================
 export async function verifyEmail(token: string) {
   try {
     const verificationToken = await prisma.verificationToken.findUnique({
@@ -97,10 +102,10 @@ export async function verifyEmail(token: string) {
     return { error: "An error occurred during verification." };
   }
 }
-// ... existing imports ...
-import crypto from "crypto";
 
-// 1. Request Password Reset
+// ==========================================
+// 3. طلب استعادة كلمة المرور (Forgot Password)
+// ==========================================
 export async function requestPasswordReset(formData: FormData) {
   const email = formData.get("email") as string;
 
@@ -142,7 +147,9 @@ export async function requestPasswordReset(formData: FormData) {
   }
 }
 
-// 2. Execute Password Reset
+// ==========================================
+// 4. تعيين كلمة مرور جديدة (Reset Password)
+// ==========================================
 export async function resetPassword(formData: FormData) {
   const token = formData.get("token") as string;
   const password = formData.get("password") as string;
