@@ -11,7 +11,7 @@ export default function NewBrokerPage() {
         action={createBroker} 
         className="space-y-6 bg-white dark:bg-zinc-900 p-6 rounded-lg border border-zinc-200 dark:border-zinc-800"
       >
-        {/* Broker Name */}
+        {/* Broker Name - Mirrors 'Title' */}
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
             Broker Name
@@ -20,12 +20,11 @@ export default function NewBrokerPage() {
             type="text" 
             name="name" 
             required 
-            placeholder="e.g. IC Markets"
             className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-white" 
           />
         </div>
 
-        {/* Rating - Mirroring the "Difficulty" select logic from reference */}
+        {/* Rating - Mirrors 'Difficulty' style */}
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
             Broker Rating
@@ -39,20 +38,20 @@ export default function NewBrokerPage() {
           />
         </div>
 
-        {/* Logo Image - Mirroring the "Cover Image" logic */}
+        {/* Logo - Mirrors 'Cover Image' */}
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
             Broker Logo
           </label>
           <input 
             type="file" 
-            name="image" 
+            name="logo" 
             accept="image/*" 
             className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400" 
           />
         </div>
 
-        {/* Website URL */}
+        {/* Website URL - Additional Broker Field */}
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
             Official Website URL
@@ -61,12 +60,11 @@ export default function NewBrokerPage() {
             type="url" 
             name="websiteUrl" 
             required 
-            placeholder="https://broker-website.com"
             className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-white" 
           />
         </div>
 
-        {/* Affiliate Link */}
+        {/* Affiliate Link - Additional Broker Field */}
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
             Affiliate Link
@@ -75,21 +73,19 @@ export default function NewBrokerPage() {
             type="url" 
             name="affiliateLink" 
             required 
-            placeholder="https://broker.com/ref=yourid"
             className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-white" 
           />
         </div>
 
-        {/* Description - Mirroring the "Content" textarea logic */}
+        {/* Description - Mirrors 'Content' */}
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-            Detailed Review/Description
+            Detailed Review / Description
           </label>
           <textarea 
             name="description" 
             required 
             rows={10} 
-            placeholder="Provide a detailed review of the broker's spreads, leverage, and regulation..."
             className="w-full p-2 border rounded-md dark:bg-zinc-950 dark:border-zinc-800 dark:text-white"
           ></textarea>
         </div>
