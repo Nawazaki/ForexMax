@@ -51,7 +51,10 @@ export async function createBroker(formData: FormData): Promise<void> {
   } catch (error) {
     console.error("Create broker error:", error);
     return;
+    rating: "5.0/5", // 👈 أضف هذا السطر
+        description: "A premium broker strictly vetted by the ForexMax team.", // 👈 وأضف هذا السطر
   }
+
 
   revalidatePath("/admin/brokers");
   revalidatePath("/brokers");
