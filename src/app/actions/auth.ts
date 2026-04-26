@@ -97,3 +97,95 @@ export async function verifyEmail(token: string) {
     return { error: "An error occurred during verification." };
   }
 }
+// ... existing imports ...
+import crypto from "crypto";
+
+// 1. Request Password Reset
+export async function requestPasswordReset(formData: FormData) {
+  const email = formData.get("email") as string;
+
+  if (!email) return { error: "Email is required." };
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return { error: "No account found with this email address." };
+
+    // Generate secure token
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 Hour expiration
+
+    // Store token in DB
+    await prisma.passwordResetToken.create({
+      data: {
+        identifier: email,
+        token: token,
+        expires: expires,
+      },
+    });
+
+    // Send email via Resend
+    const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
+    
+    await resend.emails.send({
+      from: 'ForexMax <auth@forexmax.com>',
+      to: email,
+      subject: 'Reset Your ForexMax Password',
+      html: `<p>Hello, you requested a password reset for your account.</p>
+             <a href="${resetLink}" style="display:block; padding:12px 24px; background: #10b981; color:white; border-radius:8px; text-decoration:none; font-weight:bold;">Reset Password Now</a>
+             <p>This link will expire in 1 hour.</p>`
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Reset request error:", error);
+    return { error: "An error occurred. Please try again later." };
+  }
+}
+
+// 2. Execute Password Reset
+export async function resetPassword(formData: FormData) {
+  const token = formData.get("token") as string;
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+
+  if (!token || !password || !confirmPassword) {
+    return { error: "All fields are required." };
+  }
+
+  if (password !== confirmPassword) {
+    return { error: "Passwords do not match." };
+  }
+
+  if (password.length < 6) {
+    return { error: "Password must be at least 6 characters long." };
+  }
+
+  try {
+    // Verify token and expiration
+    const resetToken = await prisma.passwordResetToken.findUnique({
+      where: { token }
+    });
+
+    if (!resetToken || resetToken.expires < new Date()) {
+      return { error: "This reset link is invalid or has expired." };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user and delete token in a single transaction
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { email: resetToken.identifier },
+        data: { password: hashedPassword },
+      }),
+      prisma.passwordResetToken.delete({
+        where: { id: resetToken.id },
+      }),
+    ]);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Password reset error:", error);
+    return { error: "An error occurred while updating your password." };
+  }
+}

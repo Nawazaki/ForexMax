@@ -111,3 +111,12 @@ model Settings {
   telegramSupport String   @default("@Nanobotai")
   updatedAt        DateTime @updatedAt
 }
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  identifier String   // User's email
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+
+  @@unique([identifier, token])
+}
