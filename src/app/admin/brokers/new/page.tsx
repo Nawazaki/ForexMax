@@ -3,18 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { Building2, ArrowRight, Star, ShieldCheck } from "lucide-react";
 
-// 🛑 منع الكاش لضمان التحديث الفوري
+// Disable caching to ensure newly added brokers appear immediately
 export const revalidate = 0;
 
 export default async function BrokersPage() {
-  // جلب البيانات الحقيقية من قاعدة البيانات
+  // Fetch real data from the database
   const brokers = await prisma.broker.findMany({
     orderBy: { createdAt: "desc" },
   });
 
   return (
     <div className="flex flex-col min-h-screen font-sans relative bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
-      {/* GLOBAL VIP BACKGROUND */}
+      {/* GLOBAL VIP BACKGROUND - Exact match to Strategies Page */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-500/10 dark:bg-emerald-500/10 blur-[150px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
         <div className="absolute bottom-[20%] left-[10%] w-[50%] h-[50%] bg-purple-600/10 dark:bg-purple-600/15 blur-[150px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
@@ -38,6 +38,7 @@ export default async function BrokersPage() {
         {/* Brokers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {brokers.length === 0 ? (
+            /* Empty State */
             <div className="col-span-full py-20 text-center text-zinc-500 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/50 dark:border-zinc-800/50 shadow-xl">
               <Building2 className="h-12 w-12 mx-auto mb-4 text-zinc-400" />
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">No Brokers Yet</h3>
@@ -74,7 +75,6 @@ export default async function BrokersPage() {
                     <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-4 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug">
                       {broker.name}
                     </h3>
-                    
                     <p className="text-zinc-600 dark:text-zinc-400 line-clamp-3 mb-8 leading-relaxed font-medium">
                       {broker.description || "A premium broker strictly vetted by the ForexMax team."}
                     </p>
