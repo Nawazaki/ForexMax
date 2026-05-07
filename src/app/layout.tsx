@@ -8,23 +8,34 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "ForexMax | Premium SMC & Forex Trading Community",
+    default: "ForexMax | Premium SMC Trading Community & Broker Reviews",
     template: "%s | ForexMax",
   },
-  description: "Join the elite circle of SMC traders. Access high-end trading strategies, trusted prop firm broker reviews, and an exclusive community dedicated to mastering the Forex markets.",
-  keywords: ["Forex trading", "SMC Trading", "Smart Money Concepts", "Prop Firms", "Best Forex Brokers", "Trading Strategies", "Forex Community", "Technical Analysis"],
+  description: "Elevate your trading with ForexMax. The premier hub for Smart Money Concepts (SMC), professional prop firm evaluations, and unbiased broker reviews. Master institutional order flow and scale your capital with the elite.",
+  keywords: [
+    "Forex trading", 
+    "SMC Trading", 
+    "Smart Money Concepts", 
+    "Prop Firms", 
+    "Best Forex Brokers", 
+    "Prop Firm Reviews", 
+    "Trading Strategies", 
+    "Institutional Trading", 
+    "Order Flow", 
+    "Liquidity"
+  ],
   authors: [{ name: "ForexMax Team" }],
   openGraph: {
-    title: "ForexMax | Master the Markets",
-    description: "The ultimate high-end community for serious forex traders and SMC specialists.",
+    title: "ForexMax | Premium SMC Trading Community & Broker Reviews",
+    description: "Master the markets with institutional-grade SMC strategies and vetted prop firm reviews.",
     url: "https://forexmax.com",
     siteName: "ForexMax",
     images: [
       {
-        url: "https://forexmax.com/og-image.jpg", // Replace with your actual OG image path
+        url: "https://forexmax.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "ForexMax Trading Platform",
+        alt: "ForexMax Premium Trading Platform",
       },
     ],
     locale: "en_US",
@@ -33,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ForexMax | Premium SMC Trading",
-    description: "Join the elite circle of SMC traders.",
+    description: "Join the elite circle of SMC traders and find the best prop firms.",
   },
 };
 
@@ -48,7 +59,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <main className="flex-grow">
             {children}
           </main>
-          {/* Footer would go here */}
         </Providers>
       </body>
     </html>
